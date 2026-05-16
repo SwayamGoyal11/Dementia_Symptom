@@ -7,19 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        cyber: {
-          dark: '#0a0a0f',
-          light: '#1a1a24',
-          accent: '#00f0ff',
-          primary: '#7000ff',
-          secondary: '#ff003c',
-          success: '#00ff66',
-          warning: '#ffcc00',
+        health: {
+          dark: '#0f172a',
+          light: '#f8fafc',
+          primary: '#0ea5e9', // Light blue
+          secondary: '#14b8a6', // Teal
+          accent: '#3b82f6', // Bright blue
+          success: '#10b981',
+          warning: '#f59e0b',
+          danger: '#ef4444',
+          card: 'rgba(255, 255, 255, 0.8)',
         }
       },
-      backgroundImage: {
-        'cyber-gradient': 'linear-gradient(to right, #0a0a0f, #1a1a24)',
-        'glow-gradient': 'radial-gradient(circle, rgba(112,0,255,0.2) 0%, rgba(10,10,15,0) 70%)',
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+      boxShadow: {
+        'glass': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+        'glass-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       }
     },
   },

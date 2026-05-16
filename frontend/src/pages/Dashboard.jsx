@@ -1,50 +1,48 @@
 import { motion } from 'framer-motion';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { ShieldAlert, CheckCircle, AlertTriangle, Activity } from 'lucide-react';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { Activity, Brain, Smartphone, AlertTriangle, CheckCircle, Lightbulb } from 'lucide-react';
 
-const data = [
-  { name: 'Mon', threats: 4, scanned: 20 },
-  { name: 'Tue', threats: 7, scanned: 35 },
-  { name: 'Wed', threats: 2, scanned: 25 },
-  { name: 'Thu', threats: 9, scanned: 45 },
-  { name: 'Fri', threats: 3, scanned: 30 },
-  { name: 'Sat', threats: 1, scanned: 15 },
-  { name: 'Sun', threats: 5, scanned: 40 },
+const mockRadarData = [
+  { subject: 'Memory', A: 80, fullMark: 100 },
+  { subject: 'Attention', A: 65, fullMark: 100 },
+  { subject: 'Processing', A: 70, fullMark: 100 },
+  { subject: 'Stress', A: 85, fullMark: 100 },
+  { subject: 'Digital Fatigue', A: 90, fullMark: 100 },
+  { subject: 'Sleep Quality', A: 40, fullMark: 100 },
 ];
 
-const recentScans = [
-  { id: 1, type: 'URL', target: 'http://secure-login-update.com', status: 'dangerous', time: '2 mins ago', score: 12 },
-  { id: 2, type: 'Email', target: 'Urgent: Account Verification', status: 'suspicious', time: '1 hour ago', score: 65 },
-  { id: 3, type: 'URL', target: 'https://github.com', status: 'safe', time: '3 hours ago', score: 100 },
-  { id: 4, type: 'QR Code', target: 'Menu PDF', status: 'safe', time: '5 hours ago', score: 95 },
+const mockTrendData = [
+  { name: 'Week 1', stress: 65, digital: 70 },
+  { name: 'Week 2', stress: 70, digital: 80 },
+  { name: 'Week 3', stress: 85, digital: 90 },
+  { name: 'Week 4', stress: 80, digital: 85 },
 ];
 
 const Dashboard = () => {
   return (
-    <div className="text-white space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto pb-10">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Security Dashboard</h1>
-          <p className="text-gray-400 mt-1">Real-time overview of your digital security posture.</p>
+          <h1 className="text-3xl font-bold text-slate-800">Risk Analytics Dashboard</h1>
+          <p className="text-slate-500 mt-1">Review your digital cognitive overload indicators based on your recent assessment.</p>
         </div>
-        <div className="glass-card px-6 py-3 flex items-center space-x-4 border-cyber-accent/30">
+        <div className="glass-card px-6 py-3 flex items-center space-x-4 border-amber-200 bg-amber-50">
           <div className="text-right">
-            <p className="text-sm text-gray-400">Risk Score</p>
-            <p className="text-2xl font-bold text-cyber-success">92/100</p>
+            <p className="text-sm text-amber-700 font-bold uppercase tracking-wider">Overall Risk Category</p>
+            <p className="text-2xl font-black text-amber-600">Moderate Risk</p>
           </div>
-          <div className="w-12 h-12 rounded-full bg-cyber-success/20 flex items-center justify-center border border-cyber-success/50">
-            <ShieldAlert className="w-6 h-6 text-cyber-success" />
+          <div className="w-12 h-12 rounded-full bg-amber-200 flex items-center justify-center">
+            <AlertTriangle className="w-6 h-6 text-amber-700" />
           </div>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* Index Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { title: 'Total Scans', value: '1,284', icon: Activity, color: 'text-blue-400', bg: 'bg-blue-400/20' },
-          { title: 'Threats Blocked', value: '34', icon: ShieldAlert, color: 'text-red-400', bg: 'bg-red-400/20' },
-          { title: 'Safe Links', value: '1,150', icon: CheckCircle, color: 'text-green-400', bg: 'bg-green-400/20' },
-          { title: 'Warnings', value: '100', icon: AlertTriangle, color: 'text-yellow-400', bg: 'bg-yellow-400/20' },
+          { title: 'Digital Overload Index', value: '78/100', icon: Smartphone, color: 'text-health-accent', bg: 'bg-health-accent/10' },
+          { title: 'Stress Index', value: '65/100', icon: Activity, color: 'text-health-warning', bg: 'bg-health-warning/10' },
+          { title: 'Cognitive Impact Index', value: '55/100', icon: Brain, color: 'text-health-success', bg: 'bg-health-success/10' },
         ].map((stat, i) => {
           const Icon = stat.icon;
           return (
@@ -57,69 +55,90 @@ const Dashboard = () => {
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-gray-400 text-sm font-medium mb-1">{stat.title}</p>
-                  <h3 className="text-3xl font-bold">{stat.value}</h3>
+                  <p className="text-slate-500 text-sm font-semibold mb-1 uppercase tracking-wider">{stat.title}</p>
+                  <h3 className="text-3xl font-bold text-slate-800">{stat.value}</h3>
                 </div>
-                <div className={`p-3 rounded-lg ${stat.bg}`}>
+                <div className={`p-3 rounded-xl ${stat.bg}`}>
                   <Icon className={`w-6 h-6 ${stat.color}`} />
                 </div>
+              </div>
+              <div className="mt-4 w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div className={`h-full ${stat.color.replace('text-', 'bg-')}`} style={{ width: stat.value.split('/')[0] + '%' }}></div>
               </div>
             </motion.div>
           );
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart */}
-        <div className="lg:col-span-2 glass-card p-6">
-          <h3 className="text-lg font-bold mb-6">Threat Activity Timeline</h3>
-          <div className="h-72">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Radar Chart */}
+        <div className="glass-card p-6">
+          <h3 className="text-lg font-bold text-slate-800 mb-2">Cognitive & Stress Profile</h3>
+          <p className="text-sm text-slate-500 mb-6">A multidimensional view of your behavioral assessment.</p>
+          <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
-                <defs>
-                  <linearGradient id="colorThreats" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ff003c" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#ff003c" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorScanned" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#00f0ff" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                <XAxis dataKey="name" stroke="#ffffff50" axisLine={false} tickLine={false} />
-                <YAxis stroke="#ffffff50" axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ backgroundColor: '#1a1a24', border: '1px solid #ffffff20', borderRadius: '8px' }} />
-                <Area type="monotone" dataKey="scanned" stroke="#00f0ff" fillOpacity={1} fill="url(#colorScanned)" />
-                <Area type="monotone" dataKey="threats" stroke="#ff003c" fillOpacity={1} fill="url(#colorThreats)" />
-              </AreaChart>
+              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={mockRadarData}>
+                <PolarGrid stroke="#e2e8f0" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8' }} />
+                <Radar name="User Profile" dataKey="A" stroke="#0ea5e9" fill="#0ea5e9" fillOpacity={0.4} />
+                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }} />
+              </RadarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Recent Scans */}
+        {/* Bar Chart */}
         <div className="glass-card p-6">
-          <h3 className="text-lg font-bold mb-6">Recent Scans</h3>
-          <div className="space-y-4">
-            {recentScans.map((scan) => (
-              <div key={scan.id} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
-                <div>
-                  <p className="font-medium text-sm truncate max-w-[150px]" title={scan.target}>{scan.target}</p>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <span className="text-xs text-gray-400">{scan.type}</span>
-                    <span className="text-xs text-gray-500">•</span>
-                    <span className="text-xs text-gray-400">{scan.time}</span>
-                  </div>
-                </div>
-                <div className={`px-2 py-1 rounded text-xs font-bold ${
-                  scan.status === 'safe' ? 'bg-green-500/20 text-green-400' :
-                  scan.status === 'suspicious' ? 'bg-yellow-500/20 text-yellow-400' :
-                  'bg-red-500/20 text-red-400'
-                }`}>
-                  {scan.status.toUpperCase()}
-                </div>
+          <h3 className="text-lg font-bold text-slate-800 mb-2">Trend Analysis</h3>
+          <p className="text-sm text-slate-500 mb-6">Historical correlation between digital usage and stress levels.</p>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={mockTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} />
+                <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
+                <Bar dataKey="digital" name="Digital Usage" fill="#94a3b8" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="stress" name="Stress Level" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Recommendations */}
+      <div className="glass-card p-8 bg-gradient-to-br from-white to-health-primary/5 border-health-primary/20">
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="p-2 bg-health-primary/10 rounded-lg">
+            <Lightbulb className="w-6 h-6 text-health-primary" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800">Personalized Evidence-Based Recommendations</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex space-x-4 items-start">
+            <div className="mt-1 w-2 h-2 rounded-full bg-health-danger flex-shrink-0"></div>
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <span className="text-xs font-bold text-health-danger uppercase tracking-wider bg-health-danger/10 px-2 py-0.5 rounded">High Priority</span>
+                <span className="text-xs text-slate-400 font-medium">Focus Recovery</span>
               </div>
-            ))}
+              <h4 className="font-bold text-slate-800 mb-1">Notification Fasting</h4>
+              <p className="text-sm text-slate-600">Your notification frequency is associated with elevated cognitive fatigue. Disable all non-essential push notifications for the next 7 days.</p>
+            </div>
+          </div>
+          
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex space-x-4 items-start">
+            <div className="mt-1 w-2 h-2 rounded-full bg-health-warning flex-shrink-0"></div>
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <span className="text-xs font-bold text-health-warning uppercase tracking-wider bg-health-warning/10 px-2 py-0.5 rounded">Medium Priority</span>
+                <span className="text-xs text-slate-400 font-medium">Sleep Hygiene</span>
+              </div>
+              <h4 className="font-bold text-slate-800 mb-1">Implement Screen Curfew</h4>
+              <p className="text-sm text-slate-600">Late-night screen exposure may impact memory consolidation. Disconnect from devices 90 minutes before bedtime.</p>
+            </div>
           </div>
         </div>
       </div>

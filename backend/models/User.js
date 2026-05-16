@@ -21,14 +21,20 @@ const UserSchema = new mongoose.Schema({
         minlength: 6,
         select: false,
     },
+    ageRange: {
+        type: String,
+        enum: ['18-24', '25-34', '35-44', '45+'],
+        required: [true, 'Please provide an age range'],
+    },
+    academicStatus: {
+        type: String,
+        enum: ['Student', 'Professional', 'Researcher', 'Other'],
+        required: [true, 'Please provide your status'],
+    },
     role: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'admin', 'researcher'],
         default: 'user',
-    },
-    riskScore: {
-        type: Number,
-        default: 0,
     },
     createdAt: {
         type: Date,

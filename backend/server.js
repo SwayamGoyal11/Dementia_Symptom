@@ -15,12 +15,12 @@ app.use(morgan('dev'));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/scan', require('./routes/scanRoutes'));
+app.use('/api/assessment', require('./routes/assessmentRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
 
 // Dummy root route
 app.get('/', (req, res) => {
-    res.send('CogniGuard API is running...');
+    res.send('CogniGuard Health-Tech Research API is running...');
 });
 
 // Error handling middleware
@@ -31,7 +31,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-// Remove strictQuery deprecation warning
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {

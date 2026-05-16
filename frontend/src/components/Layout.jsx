@@ -8,8 +8,7 @@ const Layout = () => {
 
   if (isAuthPage) {
     return (
-      <div className="min-h-screen bg-cyber-dark bg-cyber-gradient relative">
-        <div className="absolute top-0 left-0 w-full h-full bg-glow-gradient pointer-events-none"></div>
+      <div className="min-h-screen bg-slate-50 relative">
         <Navbar />
         <div className="pt-16 relative z-10">
           <Outlet />
@@ -19,12 +18,11 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cyber-dark flex">
+    <div className="min-h-screen bg-slate-50 flex">
       <Navbar />
       <Sidebar />
-      <main className="flex-1 ml-64 pt-16 min-h-screen overflow-y-auto relative bg-cyber-gradient">
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-glow-gradient pointer-events-none opacity-50"></div>
-        <div className="p-8 relative z-10">
+      <main className="flex-1 ml-64 pt-16 min-h-screen overflow-y-auto relative">
+        <div className="p-8 relative z-10 max-w-7xl mx-auto">
           <Outlet />
         </div>
       </main>

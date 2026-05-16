@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Link as LinkIcon, Mail, QrCode, ShieldAlert, BookOpen, Bot, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Database, Settings, LogOut, Users } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const Sidebar = () => {
@@ -8,17 +8,12 @@ const Sidebar = () => {
 
   const links = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'URL Scanner', path: '/scan/url', icon: LinkIcon },
-    { name: 'Email Scanner', path: '/scan/email', icon: Mail },
-    { name: 'QR Scanner', path: '/scan/qr', icon: QrCode },
-    { name: 'Threat Feed', path: '/feed', icon: ShieldAlert },
-    { name: 'Awareness Training', path: '/training', icon: BookOpen },
-    { name: 'AI Assistant', path: '/chat', icon: Bot },
-    { name: 'Settings', path: '/settings', icon: Settings },
+    { name: 'New Assessment', path: '/assessment', icon: FileText },
+    { name: 'Research Admin', path: '/admin', icon: Users },
   ];
 
   return (
-    <div className="w-64 h-screen glass-card fixed left-0 top-0 border-r border-white/10 flex flex-col pt-20 z-40">
+    <div className="w-64 h-screen bg-white fixed left-0 top-0 border-r border-slate-200 flex flex-col pt-20 z-40 shadow-sm">
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="space-y-2 px-4">
           {links.map((link) => {
@@ -29,23 +24,23 @@ const Sidebar = () => {
                 key={link.path}
                 to={link.path}
                 className={clsx(
-                  'flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 group',
+                  'flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 group font-medium',
                   isActive 
-                    ? 'bg-gradient-to-r from-cyber-primary/40 to-cyber-accent/10 border-l-4 border-cyber-accent text-white' 
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-health-primary/10 text-health-primary' 
+                    : 'text-slate-600 hover:text-health-primary hover:bg-slate-50'
                 )}
               >
-                <Icon className={clsx('w-5 h-5', isActive ? 'text-cyber-accent' : 'text-gray-400 group-hover:text-cyber-accent')} />
-                <span className="font-medium">{link.name}</span>
+                <Icon className={clsx('w-5 h-5', isActive ? 'text-health-primary' : 'text-slate-400 group-hover:text-health-primary')} />
+                <span>{link.name}</span>
               </Link>
             );
           })}
         </nav>
       </div>
-      <div className="p-4 border-t border-white/10">
-        <button className="flex items-center space-x-3 px-4 py-3 w-full rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors">
+      <div className="p-4 border-t border-slate-200">
+        <button className="flex items-center space-x-3 px-4 py-3 w-full rounded-xl text-red-500 hover:bg-red-50 transition-colors font-medium">
           <LogOut className="w-5 h-5" />
-          <span className="font-medium">Logout</span>
+          <span>Logout</span>
         </button>
       </div>
     </div>
