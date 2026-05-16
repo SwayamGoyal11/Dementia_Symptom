@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FileText, Database, Settings, LogOut, Users } from 'lucide-react';
+import { LayoutDashboard, FileText, LogOut, Users } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const Sidebar = () => {

@@ -69,7 +69,7 @@ const ThreatFeed = () => {
         </div>
         
         <div className="divide-y divide-white/5 relative">
-          {threats.map((threat, idx) => {
+          {threats.map((threat) => {
             const Icon = threat.icon;
             return (
               <motion.div 

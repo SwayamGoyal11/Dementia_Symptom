@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Users, FileText, Activity, BarChart2, CheckCircle } from 'lucide-react';
+import { Users, FileText, Activity, CheckCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const mockDemoData = [

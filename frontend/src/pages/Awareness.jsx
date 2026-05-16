@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { BookOpen, Shield, HelpCircle, CheckCircle, Lock, Monitor, EyeOff } from 'lucide-react';
+import { Shield, HelpCircle, CheckCircle, Lock, Monitor } from 'lucide-react';
 
 const modules = [
   { title: 'Phishing 101', icon: Mail, desc: 'Learn how to identify fake emails and malicious links.', progress: 100 },

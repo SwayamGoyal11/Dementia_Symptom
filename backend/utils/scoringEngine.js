@@ -1,21 +1,26 @@
 exports.calculateRisk = (data) => {
     // Helper to calculate average of an object's values
     const average = (obj) => {
-        const values = Object.values(obj).filter(val => typeof val === 'number');
+        const values = Object.values(obj || {}).filter(val => typeof val === 'number' && Number.isFinite(val));
         if (values.length === 0) return 0;
         const sum = values.reduce((a, b) => a + b, 0);
         return (sum / values.length);
     };
 
-    // Calculate component scores out of 100
-    // Digital Usage is a mix of values. Let's normalize it to a 100 scale roughly.
-    // Assuming screenTime is out of 16 hrs, others out of 5.
-    let digitalRaw = 0;
-    digitalRaw += Math.min(data.digitalUsage.screenTime / 16 * 5, 5);
-    digitalRaw += Math.min(data.digitalUsage.longestSession / 8 * 5, 5);
-    digitalRaw += (data.digitalUsage.appSwitching + data.digitalUsage.notificationFreq + data.digitalUsage.nightUsage + data.digitalUsage.socialMedia + data.digitalUsage.compulsiveChecking) / 5;
-    
-    const digitalOverloadIndex = Math.min(Math.round((digitalRaw / 7) * 20), 100); 
+    const normalize = (value, max) => Math.min(Math.max((Number(value) || 0) / max, 0), 1) * 100;
+
+    const digitalMetrics = [
+        normalize(data.digitalUsage.screenTime, 16),
+        normalize(data.digitalUsage.longestSession, 8),
+        normalize(data.digitalUsage.appsUsed, 20),
+        normalize(data.digitalUsage.appSwitching, 5),
+        normalize(data.digitalUsage.notificationFreq, 5),
+        normalize(data.digitalUsage.nightUsage, 5),
+        normalize(data.digitalUsage.socialMedia, 5),
+        normalize(data.digitalUsage.compulsiveChecking, 5)
+    ];
+
+    const digitalOverloadIndex = Math.round(digitalMetrics.reduce((sum, score) => sum + score, 0) / digitalMetrics.length);
     const stressIndex = Math.round((average(data.stress) / 5) * 100);
     const cognitiveImpactIndex = Math.round((average(data.cognitive) / 5) * 100);
 

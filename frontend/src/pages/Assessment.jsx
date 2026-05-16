@@ -16,7 +16,7 @@ const Assessment = () => {
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/dashboard'); // Simulate submission
+    navigate('/dashboard', { state: { assessmentData: formData } });
   };
 
   const renderLikert = (section, key, label) => (
@@ -88,10 +88,15 @@ const Assessment = () => {
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Longest Continuous Screen Session (hours): {formData.digitalUsage.longestSession}h</label>
                 <input type="range" min="0" max="8" value={formData.digitalUsage.longestSession} onChange={e => setFormData({...formData, digitalUsage: {...formData.digitalUsage, longestSession: parseInt(e.target.value)}})} className="w-full accent-health-primary" />
               </div>
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Apps Used on a Typical Day: {formData.digitalUsage.appsUsed}</label>
+                <input type="range" min="0" max="20" value={formData.digitalUsage.appsUsed} onChange={e => setFormData({...formData, digitalUsage: {...formData.digitalUsage, appsUsed: parseInt(e.target.value)}})} className="w-full accent-health-primary" />
+              </div>
               
               {renderLikert('digitalUsage', 'appSwitching', 'How frequently do you rapidly switch between multiple apps?')}
               {renderLikert('digitalUsage', 'notificationFreq', 'How often are you interrupted by non-essential notifications?')}
               {renderLikert('digitalUsage', 'nightUsage', 'How often do you use digital devices within 1 hour before sleep?')}
+              {renderLikert('digitalUsage', 'socialMedia', 'How often do you spend long sessions on social media or short-form content?')}
               {renderLikert('digitalUsage', 'compulsiveChecking', 'How often do you compulsively check your device without a specific purpose?')}
             </motion.div>
           )}
@@ -104,6 +109,9 @@ const Assessment = () => {
               {renderLikert('stress', 'taskOverwhelm', 'I feel overwhelmed by the volume of digital tasks and messages.')}
               {renderLikert('stress', 'difficultyRelaxing', 'I find it difficult to relax without checking a digital device.')}
               {renderLikert('stress', 'sleepDisturbance', 'I experience difficulty falling or staying asleep.')}
+              {renderLikert('stress', 'physicalSymptoms', 'I notice headaches, eye strain, or tension after heavy device use.')}
+              {renderLikert('stress', 'irritability', 'I become irritable when digital tasks, messages, or alerts pile up.')}
+              {renderLikert('stress', 'productivityAnxiety', 'I feel pressure to stay constantly available or productive online.')}
             </motion.div>
           )}
 
@@ -111,9 +119,13 @@ const Assessment = () => {
             <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <h2 className="text-2xl font-bold text-slate-800 mb-6 border-b border-slate-200 pb-4">Part 3: Cognitive Overload Symptoms</h2>
               {renderLikert('cognitive', 'generalForgetfulness', 'I frequently forget minor details or recent conversations.')}
+              {renderLikert('cognitive', 'shortTermMemory', 'I have trouble remembering what I was doing after a notification or interruption.')}
               {renderLikert('cognitive', 'focusFragmentation', 'I struggle to maintain focus on a single task for more than 20 minutes without digital distraction.')}
               {renderLikert('cognitive', 'informationRetention', 'I find it difficult to retain information read on a screen compared to paper.')}
+              {renderLikert('cognitive', 'attentionSpan', 'My attention span feels shorter than it used to.')}
+              {renderLikert('cognitive', 'spatialAwareness', 'I feel less aware of my surroundings after extended screen use.')}
               {renderLikert('cognitive', 'slowerThinking', 'I feel my thinking process is slower or more sluggish than usual.')}
+              {renderLikert('cognitive', 'problemSolving', 'I find complex problem solving harder after heavy digital multitasking.')}
               {renderLikert('cognitive', 'creativeThinking', 'I have difficulty generating new ideas or engaging in deep, creative thought.')}
             </motion.div>
           )}

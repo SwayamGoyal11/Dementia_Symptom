@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Activity, Brain, Shield, LineChart, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Activity, Brain, Shield, LineChart, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const features = [
