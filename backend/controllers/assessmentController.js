@@ -1,5 +1,5 @@
-const Assessment = require('../models/Assessment');
 const { calculateRisk, generateRecommendations } = require('../utils/scoringEngine');
+const { createId, readStore, writeStore } = require('../utils/dataStore');
 
 exports.submitAssessment = async (req, res) => {
     try {
@@ -13,18 +13,23 @@ exports.submitAssessment = async (req, res) => {
         const results = calculateRisk(data);
         const recommendations = generateRecommendations(results, data);
 
-        const assessment = await Assessment.create({
+        const store = readStore();
+        const assessment = {
+            id: createId(),
             user: req.user.id,
             digitalUsage,
             stress,
             cognitive,
             results,
-            recommendations
-        });
+            recommendations,
+            completedAt: new Date().toISOString(),
+        };
 
-        // Update user risk score for quick access
-        const User = require('../models/User');
-        await User.findByIdAndUpdate(req.user.id, { $set: { riskScore: results.overallRiskScore } });
+        store.assessments.push(assessment);
+        store.users = store.users.map((user) => (
+            user.id === req.user.id ? { ...user, riskScore: results.overallRiskScore } : user
+        ));
+        writeStore(store);
 
         res.status(201).json({ success: true, data: assessment });
     } catch (err) {
@@ -34,7 +39,9 @@ exports.submitAssessment = async (req, res) => {
 
 exports.getHistory = async (req, res) => {
     try {
-        const assessments = await Assessment.find({ user: req.user.id }).sort('-completedAt');
+        const assessments = readStore().assessments
+            .filter((assessment) => assessment.user === req.user.id)
+            .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
         res.status(200).json({ success: true, data: assessments });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
@@ -43,7 +50,9 @@ exports.getHistory = async (req, res) => {
 
 exports.getLatestAssessment = async (req, res) => {
     try {
-        const assessment = await Assessment.findOne({ user: req.user.id }).sort('-completedAt');
+        const assessment = readStore().assessments
+            .filter((item) => item.user === req.user.id)
+            .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))[0] || null;
         res.status(200).json({ success: true, data: assessment });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
@@ -52,9 +61,8 @@ exports.getLatestAssessment = async (req, res) => {
 
 exports.getAnalytics = async (req, res) => {
     try {
-        // Admin route to get overall anonymized analytics
-        const totalAssessments = await Assessment.countDocuments();
-        const assessments = await Assessment.find();
+        const assessments = readStore().assessments;
+        const totalAssessments = assessments.length;
         
         const avgRisk = assessments.reduce((acc, curr) => acc + curr.results.overallRiskScore, 0) / totalAssessments || 0;
         

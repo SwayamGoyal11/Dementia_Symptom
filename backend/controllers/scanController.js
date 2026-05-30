@@ -1,5 +1,5 @@
-const ThreatScan = require('../models/ThreatScan');
 const aiSimulator = require('../utils/aiSimulator');
+const { createId, readStore, writeStore } = require('../utils/dataStore');
 
 exports.scanUrl = async (req, res) => {
     try {
@@ -8,12 +8,18 @@ exports.scanUrl = async (req, res) => {
 
         const result = aiSimulator.analyzeUrl(url);
 
-        const scan = await ThreatScan.create({
+        const store = readStore();
+        const scan = {
+            id: createId(),
             user: req.user.id,
             scanType: 'url',
             target: url,
-            ...result
-        });
+            ...result,
+            scannedAt: new Date().toISOString(),
+        };
+
+        store.threatScans.push(scan);
+        writeStore(store);
 
         res.status(200).json({ success: true, data: scan });
     } catch (err) {
@@ -28,12 +34,18 @@ exports.scanEmail = async (req, res) => {
 
         const result = aiSimulator.analyzeEmail(text);
 
-        const scan = await ThreatScan.create({
+        const store = readStore();
+        const scan = {
+            id: createId(),
             user: req.user.id,
             scanType: 'email',
             target: text.substring(0, 50) + '...',
-            ...result
-        });
+            ...result,
+            scannedAt: new Date().toISOString(),
+        };
+
+        store.threatScans.push(scan);
+        writeStore(store);
 
         res.status(200).json({ success: true, data: scan });
     } catch (err) {
@@ -43,7 +55,9 @@ exports.scanEmail = async (req, res) => {
 
 exports.getHistory = async (req, res) => {
     try {
-        const scans = await ThreatScan.find({ user: req.user.id }).sort('-scannedAt');
+        const scans = readStore().threatScans
+            .filter((scan) => scan.user === req.user.id)
+            .sort((a, b) => new Date(b.scannedAt) - new Date(a.scannedAt));
         res.status(200).json({ success: true, data: scans });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });

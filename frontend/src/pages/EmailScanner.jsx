@@ -7,6 +7,57 @@ const EmailScanner = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState(null);
 
+  const analyzeEmail = (text) => {
+    const lowerText = text.toLowerCase();
+    let score = 100;
+    const indicators = [];
+
+    const patterns = [
+      { regex: /\burgent\b|\bimmediate action\b|\bact now\b/, points: 18, label: 'Urgency language used' },
+      { regex: /\bclick here\b|\bverify your account\b|\breset your password\b|\bconfirm your identity\b/, points: 18, label: 'Suspicious call to action detected' },
+      { regex: /\bpassword\b|\bssn\b|\bcredit card\b|\bbank account\b|\bsecurity code\b/, points: 25, label: 'Requesting sensitive credentials' },
+      { regex: /\bdear customer\b|\bdear user\b|\bdear valued\b|\bvalued customer\b/, points: 12, label: 'Generic greeting used' },
+      { regex: /\baccount suspended\b|\baccount locked\b|\bpayment failed\b|\bunauthorized login\b/, points: 22, label: 'Account action scare tactic detected' },
+      { regex: /\bfree\b|\bgift\b|\bprize\b|\bcongratulations\b/, points: 10, label: 'Too-good-to-be-true offer detected' },
+    ];
+
+    patterns.forEach(({ regex, points, label }) => {
+      if (regex.test(lowerText)) {
+        score -= points;
+        indicators.push(label);
+      }
+    });
+
+    if (lowerText.includes('http://') || lowerText.includes('https://')) {
+      score -= 8;
+      indicators.push('Contains a direct link in the message');
+    }
+
+    if (lowerText.includes('reply to') || lowerText.includes('sender')) {
+      score -= 6;
+      indicators.push('Email references reply or sender information');
+    }
+
+    if (lowerText.length < 40) {
+      score -= 5;
+      indicators.push('Very short email body, which can indicate a template');
+    }
+
+    if (lowerText.includes('unsubscribe') && !lowerText.includes('newsletter')) {
+      score -= 5;
+      indicators.push('Suspicious unsubscribe request present');
+    }
+
+    score = Math.max(0, Math.min(100, score));
+    const status = score < 50 ? 'dangerous' : score < 80 ? 'suspicious' : 'safe';
+
+    return {
+      status,
+      score,
+      indicators: indicators.length ? indicators : ['No clear phishing indicators detected']
+    };
+  };
+
   const handleScan = (e) => {
     e.preventDefault();
     if (!emailText) return;
@@ -16,25 +67,7 @@ const EmailScanner = () => {
 
     // Simulate AI analysis
     setTimeout(() => {
-      let status = 'safe';
-      let score = 90;
-      let indicators = ['Standard language patterns', 'No urgent requests'];
-      
-      const lowerText = emailText.toLowerCase();
-      
-      if (lowerText.includes('urgent') || lowerText.includes('password') || lowerText.includes('click here')) {
-        status = 'suspicious';
-        score = 40;
-        indicators = ['Urgency language detected', 'Suspicious call to action (click here)', 'Request for credentials'];
-      }
-      
-      if (lowerText.includes('ssn') || lowerText.includes('credit card') || lowerText.includes('account suspended')) {
-        status = 'dangerous';
-        score = 15;
-        indicators = ['High-risk threat: account suspension claim', 'Requesting highly sensitive data', 'Classic phishing template match'];
-      }
-
-      setResult({ status, score, indicators });
+      setResult(analyzeEmail(emailText));
       setIsScanning(false);
     }, 2500);
   };

@@ -7,6 +7,67 @@ const UrlScanner = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState(null);
 
+  const analyzeUrl = (targetUrl) => {
+    const urlText = targetUrl.trim();
+    const lowerUrl = urlText.toLowerCase();
+    let score = 100;
+    const indicators = [];
+
+    if (!lowerUrl.startsWith('https://')) {
+      score -= 20;
+      indicators.push('No HTTPS encryption detected');
+    } else {
+      indicators.push('Found HTTPS encryption');
+    }
+
+    const suspiciousKeywords = ['login', 'verify', 'secure', 'account', 'banking', 'update', 'confirm', 'signin', 'password', 'free', 'gift', 'security', 'alert'];
+    const foundKeywords = suspiciousKeywords.filter((kw) => lowerUrl.includes(kw));
+    if (foundKeywords.length) {
+      score -= Math.min(40, foundKeywords.length * 10);
+      indicators.push(`Suspicious keywords detected: ${foundKeywords.join(', ')}`);
+    }
+
+    if (/(\d{1,3}\.){3}\d{1,3}/.test(lowerUrl)) {
+      score -= 35;
+      indicators.push('IP-based URL detected');
+    }
+
+    if (lowerUrl.includes('bit.ly') || lowerUrl.includes('tinyurl') || lowerUrl.includes('goo.gl') || lowerUrl.includes('t.co')) {
+      score -= 25;
+      indicators.push('URL shortener detected');
+    }
+
+    if (lowerUrl.includes('%') || lowerUrl.includes('/../') || lowerUrl.includes('/..')) {
+      score -= 15;
+      indicators.push('Obfuscated or encoded path detected');
+    }
+
+    const subdomainCount = lowerUrl.split('.').length - 1;
+    if (subdomainCount > 3) {
+      score -= 10;
+      indicators.push('Excessive subdomain or path complexity');
+    }
+
+    if (lowerUrl.includes('https://www.')) {
+      score -= 5;
+      indicators.push('Potential typo-squatting with extra www');
+    }
+
+    if (lowerUrl.length < 20) {
+      score -= 5;
+      indicators.push('Very short URL may be suspicious');
+    }
+
+    score = Math.max(0, Math.min(100, score));
+    const status = score < 50 ? 'dangerous' : score < 80 ? 'suspicious' : 'safe';
+
+    if (status === 'safe' && indicators.length === 0) {
+      indicators.push('No obvious threats detected');
+    }
+
+    return { status, score, indicators };
+  };
+
   const handleScan = (e) => {
     e.preventDefault();
     if (!url) return;
@@ -16,23 +77,7 @@ const UrlScanner = () => {
 
     // Simulate API call
     setTimeout(() => {
-      let status = 'safe';
-      let score = 95;
-      let indicators = ['Valid HTTPS certificate', 'No malicious history', 'Domain age > 5 years'];
-      
-      if (url.includes('login') || url.includes('verify')) {
-        status = 'suspicious';
-        score = 45;
-        indicators = ['Suspicious keywords in URL', 'Newly registered domain'];
-      }
-      
-      if (url.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) || url.includes('bit.ly')) {
-        status = 'dangerous';
-        score = 12;
-        indicators = ['IP-based URL detected', 'URL shortener used', 'Blacklisted domain match'];
-      }
-
-      setResult({ status, score, indicators });
+      setResult(analyzeUrl(url));
       setIsScanning(false);
     }, 2000);
   };

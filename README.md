@@ -16,7 +16,7 @@ CogniGuard is a modern, full-stack, AI-driven health-tech research platform focu
 ## 🛠️ Tech Stack
 
 - **Frontend**: React, Vite, Tailwind CSS, Framer Motion, Recharts, Lucide React
-- **Backend**: Node.js, Express, MongoDB, JWT Auth
+- **Backend**: Node.js, Express, file-backed JSON storage, JWT Auth
 - **Environment**: Local Windows setup via VS Code
 
 ---
@@ -27,36 +27,35 @@ Follow these instructions to run the application locally in VS Code on your Wind
 
 ### Prerequisites
 - Node.js installed (v18 or higher recommended)
-- MongoDB installed locally OR a MongoDB Atlas connection string. (The app defaults to `mongodb://127.0.0.1:27017/cogniguard`).
 
 ### 1. Backend Setup
 1. Open a new terminal in VS Code.
 2. Navigate to the backend folder:
-   ```bash
+   ```
    cd backend
    ```
 3. Install dependencies:
-   ```bash
+   ```
    npm install
    ```
 4. Start the backend server:
-   ```bash
+   ```
    npm run server
    ```
-   *The server should run on `http://localhost:5000` and connect to MongoDB.*
+   *The server should run on `http://localhost:5000` without any external database setup.*
 
 ### 2. Frontend Setup
 1. Open a **second** terminal in VS Code.
 2. Navigate to the frontend folder:
-   ```bash
+   ```
    cd frontend
    ```
 3. Install dependencies:
-   ```bash
+   ```
    npm install
    ```
 4. Start the frontend development server:
-   ```bash
+   ```
    npm run dev
    ```
    *The frontend should run on `http://localhost:5173`.*

@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
@@ -18,9 +17,8 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/assessment', require('./routes/assessmentRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
 
-// Dummy root route
 app.get('/', (req, res) => {
-    res.send('CogniGuard Health-Tech Research API is running...');
+    res.send('CogniGuard Health-Tech Research API is running without an external database.');
 });
 
 // Error handling middleware
@@ -31,10 +29,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => {
-        console.log('Connected to MongoDB');
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    })
-    .catch((err) => console.error('MongoDB connection error:', err));
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
